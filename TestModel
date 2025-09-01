@@ -1,0 +1,53 @@
+import gymnasium as gym
+import torch
+import torch.nn as nn
+
+# ---------------------
+# پارامترها
+# ---------------------
+STATE_SIZE = 4
+ACTION_SIZE = 2
+MODEL_PATH = "dqn_cartpole.pth"
+
+# ---------------------
+# شبکه عصبی (همان DQN)
+# ---------------------
+class DQN(nn.Module):
+    def __init__(self):
+        super(DQN, self).__init__()
+        self.fc1 = nn.Linear(STATE_SIZE, 64)
+        self.fc2 = nn.Linear(64, 64)
+        self.fc3 = nn.Linear(64, ACTION_SIZE)
+        
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return self.fc3(x)
+
+# ---------------------
+# محیط با رندر
+# ---------------------
+env = gym.make("CartPole-v1", render_mode="human")
+
+# ---------------------
+# بارگذاری مدل
+# ---------------------
+policy_net = DQN()
+policy_net.load_state_dict(torch.load(MODEL_PATH))
+policy_net.eval()
+
+# ---------------------
+# اجرای تست
+# ---------------------
+state, info = env.reset()
+done = False
+while not done:
+    state_tensor = torch.FloatTensor(state).unsqueeze(0)
+    with torch.no_grad():
+        action = policy_net(state_tensor).argmax().item()
+    state, reward, done, truncated, info = env.step(action)
+    env.render()
+    if done or truncated:
+        break
+
+env.close()
