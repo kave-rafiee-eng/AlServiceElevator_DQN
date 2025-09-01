@@ -67,10 +67,10 @@ def add_random_passengers(sim, num_passengers):
 def reset_simulator(current_episode):
     sim = ElevatorSimulator()
 
-   # for i in range(1, 9):  # مثلاً 5 مسافر ثابت
-    #    sim.add_passenger(i, 0)
+    for i in range(1, 9):  # مثلاً 5 مسافر ثابت
+       sim.add_passenger(i, 0)
 
-
+    """
     if current_episode < 500:
         # --- مرحله اول: سناریوی ساده و تکراری ---
         for i in range(1, 6):  # مثلاً 5 مسافر ثابت
@@ -96,7 +96,7 @@ def reset_simulator(current_episode):
         # --- مرحله چهارم: کاملاً رندوم ---
         add_random_passengers( sim , random.randint(3, 8))
 
-
+    """
     return sim
 
 
