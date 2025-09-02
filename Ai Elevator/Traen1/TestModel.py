@@ -97,7 +97,11 @@ STATE_SIZE = 33
 ACTION_SIZE = 10  # طبق تعداد طبقات آسانسور
 
 model = DQN(STATE_SIZE, ACTION_SIZE)
-model.load_state_dict(torch.load("Outputs/final_weights_1000.pth"))  # فقط وزن‌ها
+#model.load_state_dict(torch.load("Outputs/final_weights_1000.pth"))  # فقط وزن‌ها
+
+model.load_state_dict(torch.load("C:/Users/kave/Desktop/AdvanceElevator_Kave/Ai/AlServiceElevator_DQN/Ai Elevator/Traen1/Outputs/final_weights_25000.pth"))  # فقط وزن‌ها
+
+
 model.eval()  # حالا درست اجرا میشه
 
 

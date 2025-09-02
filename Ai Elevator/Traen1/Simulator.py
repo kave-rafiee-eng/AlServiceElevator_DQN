@@ -11,7 +11,7 @@ class PassengerStatus(Enum):
     ARRIVED = 3
 
 class ElevatorSimulator:
-    def __init__(self, width=1000, height=800, num_floors=10):
+    def __init__(self, width=900, height=600, num_floors=10):
         # تنظیمات صفحه
         self.WIDTH = width
         self.HEIGHT = height

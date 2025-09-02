@@ -588,15 +588,16 @@ if __name__ == '__main__':
     RL_hyperparams = {
         "train_mode"            : train_mode,
         "RL_load_path"          : f'./Outputs/final_weights' + '_' + '3000' + '.pth',
-        "save_path"             : f'./Outputs/final_weights',
-        "save_interval"         : 1000,
+        "save_path"             : f'./final_weights',      
+        #"save_path"             : f'C:/Users/kave/Desktop/AdvanceElevator_Kave/Ai/AlServiceElevator_DQN/Ai Elevator/Traen1/Outputs/final_weights',
+        "save_interval"         : 25000,
         
         "clip_grad_norm"        : 3,
         "learning_rate"         : 6e-4,
         "discount_factor"       : 0.93,
         "batch_size"            : 32,
         "update_frequency"      : 10,
-        "max_episodes"          : 1000           if train_mode else 5,
+        "max_episodes"          : 25000           if train_mode else 5,
         "max_steps"             : 300,
         "render"                : render,
         
