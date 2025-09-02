@@ -56,49 +56,61 @@ class ElevatorSimulator:
 
         reward = 0.0
 
-        # ------------------ 1. جریمه حرکت ------------------
-        if self.CabinPos != last_pos:
-            reward -= 0.05  # جریمه کوچک برای هر حرکت
+        # ------------------ 5. جریمه جهت اشتباه ------------------
+        TotalCabin = 0
+        wrongDir = False
+        for p in self.passengers:
+            if p["status"] == PassengerStatus.IN_CABIN:
+                TotalCabin += 1
+                cabin_dir = self.CabinPos - last_pos   # مثبت = بالا، منفی = پایین
+                pass_dir = p["destination"] - p["origin"]
+                if cabin_dir * pass_dir < 0:  # خلاف جهت
+                    reward -= 1.5
+                    wrongDir = True
 
         # ------------------ 2. جریمه توقف بیهوده ------------------
         if self.CabinPos == last_pos:
-            reward -= 0.5
+            reward += -0.9
 
-        # ------------------ 3. پاداش برای سوار کردن مسافر ------------------
-        for p in self.passengers:
-            if p["status"] == PassengerStatus.IN_CABIN and not p.get("boarded_rewarded", False):
-                reward += 0.1
-                p["boarded_rewarded"] = True
+        if not self.change :
+            reward += -0.9
+        else :
+            unique_floors = len(set(
+                [p["origin"] for p in self.passengers] +
+                [p["destination"] for p in self.passengers]
+            ))
+                        
+            reward += (1 / unique_floors) * 1 
 
-        # ------------------ 4. پاداش رسیدن مسافر به مقصد ------------------
+            if not wrongDir :
+                reward += (1 / unique_floors) * TotalCabin
+
+        # ------------------ 7. پایان اپیزود ------------------
+        if all(p["status"] == PassengerStatus.ARRIVED for p in self.passengers):
+            
+            unique_floors = len(set(
+                [p["origin"] for p in self.passengers] +
+                [p["destination"] for p in self.passengers]
+            ))
+            print(f" unique_floors={unique_floors}, steps={self.step} ")
+            if unique_floors == self.step :
+                reward += 5
+            #print(f"All passengers arrived! , totalReward={self.totalReward:.2f}")
+
+        """
+
+                # ------------------ 4. پاداش رسیدن مسافر به مقصد ------------------
         for p in self.passengers:
             if p["status"] == PassengerStatus.ARRIVED and not p.get("arrived_rewarded", False):
                 total_passengers = len(self.passengers)
                 reward = (1 / total_passengers) * 2   
                 p["arrived_rewarded"] = True
 
-        # ------------------ 5. جریمه جهت اشتباه ------------------
+                # ------------------ 3. پاداش برای سوار کردن مسافر ------------------
         for p in self.passengers:
-            if p["status"] == PassengerStatus.IN_CABIN:
-                cabin_dir = self.CabinPos - last_pos   # مثبت = بالا، منفی = پایین
-                pass_dir = p["destination"] - p["origin"]
-                if cabin_dir * pass_dir < 0:  # خلاف جهت
-                    reward -= 0.3
-
-        # ------------------ 6. جریمه زمان انتظار ------------------
-        for p in self.passengers:
-            if p["status"] == PassengerStatus.IN_HALL:
-                reward -= 0.01 * p.get("Hall_WT", 0)
-            elif p["status"] == PassengerStatus.IN_CABIN:
-                reward -= 0.01 * p.get("Cabin_WT", 0)
-
-        # ------------------ 7. پایان اپیزود ------------------
-        if all(p["status"] == PassengerStatus.ARRIVED for p in self.passengers):
-            print(f"All passengers arrived! steps={self.step}, totalReward={self.totalReward:.2f}")
-
-
-        """
-        #reward += -0.05 * abs ( self.CabinPos - last_pos )
+            if p["status"] == PassengerStatus.IN_CABIN and not p.get("boarded_rewarded", False):
+                reward += 0.1
+                p["boarded_rewarded"] = True
 
         TotalCabin = 0
         for p in self.passengers:

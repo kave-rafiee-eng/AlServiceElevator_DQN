@@ -48,29 +48,30 @@ class ElevatorEnv:
     def reset(self, seed=None , currentEpisode=0 ):
         self.sim = ElevatorSimulator()
         
+        
         if (currentEpisode % 5 ) == 0 or self.passenger_scenario is None:
             num_passengers = random.randint(1, 8)
             self.passenger_scenario = []
-            """
+            '''
             for _ in range(num_passengers):
                 origin = random.randint(0, self.sim.NumOfFloor - 1)
                 destination = random.randint(0, self.sim.NumOfFloor - 1)
                 while destination == origin:  # مبدا ≠ مقصد
                     destination = random.randint(0, self.sim.NumOfFloor - 1)
                 self.passenger_scenario.append((origin, destination))
-            """
+            '''
             #Down
             for _ in range(num_passengers):
-                origin = random.randint(1, self.sim.NumOfFloor - 1)  # مبدا نمی‌تونه 0 باشه
+                origin = random.randint(1, self.sim.NumOfFloor - 3)  # مبدا نمی‌تونه 0 باشه
                 destination = random.randint(0, origin - 1)          # مقصد حتماً کوچکتر از مبدا
                 self.passenger_scenario.append((origin, destination))
 
         for origin, destination in self.passenger_scenario:
             self.sim.add_passenger(origin , destination )
-
+        
         #---------- 
-        #for i in range( 1, 9 ): 
-        #   self.sim.add_passenger(i, 0)
+        #for i in range( 1, 8 ): 
+         #  self.sim.add_passenger(i, 0)
 
         #---------- Full Random
         #add_random_passengers( self.sim , random.randint(1, 8))
@@ -588,14 +589,14 @@ if __name__ == '__main__':
         "train_mode"            : train_mode,
         "RL_load_path"          : f'./Outputs/final_weights' + '_' + '3000' + '.pth',
         "save_path"             : f'./Outputs/final_weights',
-        "save_interval"         : 3000,
+        "save_interval"         : 1000,
         
         "clip_grad_norm"        : 3,
         "learning_rate"         : 6e-4,
         "discount_factor"       : 0.93,
         "batch_size"            : 32,
         "update_frequency"      : 10,
-        "max_episodes"          : 3000           if train_mode else 5,
+        "max_episodes"          : 1000           if train_mode else 5,
         "max_steps"             : 300,
         "render"                : render,
         

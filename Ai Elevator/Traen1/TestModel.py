@@ -5,7 +5,6 @@ import random
 import torch
 
 
-
 def add_random_passengers(sim, num_passengers):
     for _ in range(num_passengers):
         start = random.randint(0, sim.NumOfFloor - 1)   # اصلاح شد
@@ -14,35 +13,45 @@ def add_random_passengers(sim, num_passengers):
             dest = random.randint(0, sim.NumOfFloor - 1)
         sim.add_passenger(start, dest)
 
+
 def reset_simulator():
     sim = ElevatorSimulator()
+
+    GenerateRandom = True
+
+    if GenerateRandom == True :
+
+        passenger_scenario = []
+        num_passengers = random.randint(1, 8)
+
+        for _ in range(num_passengers):
+            origin = random.randint(1, sim.NumOfFloor - 3)  # مبدا نمی‌تونه 0 باشه
+            destination = random.randint(0, origin - 1)          # مقصد حتماً کوچکتر از مبدا
+            passenger_scenario.append((origin, destination))
+        
+        for origin, destination in passenger_scenario:
+            sim.add_passenger(origin , destination )
+            
+    else :
+        for i in range( 1, 8 ): 
+            sim.add_passenger(i, 0)
 
     #-----------------------
     #add_random_passengers( sim , random.randint(1, 8))
 
     #-----------------------
-    #for i in range( 1, 9 ): 
-       #sim.add_passenger(i, 0)
+
     
     #-----------------------
     #sim.add_passenger(8, 0)
 
     #-----------------------
-    passenger_scenario = []
-    num_passengers = random.randint(1, 8)
 
-    for _ in range(num_passengers):
-        origin = random.randint(1, sim.NumOfFloor - 1)  # مبدا نمی‌تونه 0 باشه
-        destination = random.randint(0, origin - 1)          # مقصد حتماً کوچکتر از مبدا
-        passenger_scenario.append((origin, destination))
-    
-    for origin, destination in passenger_scenario:
-        sim.add_passenger(origin , destination )
     return sim
+
 
 pygame.init()
 sim = reset_simulator()
-
 
 # بارگذاری مدل
 
@@ -88,7 +97,7 @@ STATE_SIZE = 33
 ACTION_SIZE = 10  # طبق تعداد طبقات آسانسور
 
 model = DQN(STATE_SIZE, ACTION_SIZE)
-model.load_state_dict(torch.load("Outputs/final_weights_3000.pth"))  # فقط وزن‌ها
+model.load_state_dict(torch.load("Outputs/final_weights_1000.pth"))  # فقط وزن‌ها
 model.eval()  # حالا درست اجرا میشه
 
 
